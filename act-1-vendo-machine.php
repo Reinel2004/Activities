@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendo Machine</title>
+</head>
+<body>
+
+    <?php 
+        $drinks = [
+            'Coke' => 15,
+            'Sprite' => 20,
+            'Royal' => 20,
+            'Pepsi' => 15,
+            'Mountain Dew' => 20
+        ];
+           
+
+
+        $sizes = [
+            'Regular' => 0,
+            'Up-Size' => 5,
+            'Jumbo' => 10
+        
+        ];
+          
+
+    ?>
+    <form method="post">
+        <h1>Vendo Machine</h1>
+        <br>
+
+        <fieldset>
+            <legend>Products: </legend>
+            <?php
+                if(isset($drinks)) { 
+                    foreach($drinks as $key => $value) {
+                        echo '<input type="checkbox" name="chkDrinks[]" id="chkDrink' . $key . '" value="' . $key .'">';
+                        echo '<label for="chkDrinks[]"> ' . $key . ' - ₱' . $value . '</label><br>';
+                    }
+                }
+            ?>
+        </fieldset>
+
+        <fieldset>
+            <legend>Options: </legend>
+            <label for="drpSizes">Size</label>
+            <select name="drpSizes" id="drpSizes">
+                <?php 
+                    foreach ($sizes as $key => $value) {
+                        if ($key != 'Regular') {
+                            echo '<option value="' . $key . '">' . $key . ' (add ₱' . $value . ')</option>';
+                        } else {
+                            echo '<option value="' . $key . '">' . $key . '</option>';
+                        }
+                    }
+                ?>
+                <option value=""></option>
+            </select>
+
+            <label for="noQuantity">Quantity</label>
+            <input type="number" name="noQuantity" id="noQuantity" min="1" value="0">
+            <button type="submit" name="btnCheck">Check out</button>
+        </fieldset>
+    </form>
+    
+     
+    <?php if(isset($_POST['btnCheck'])){ ?>
+            <?php if(!empty($_POST['chkDrinks'])){ ?>
+                <hr>
+                <h1>Purchase Summary: </h1>
+
+                <ul>
+                    <?php 
+                        $drinksChoosen = $_POST['chkDrinks'];
+                        $size = $_POST['drpSizes'];
+                        $quantity = $_POST['noQuantity'];
+                        $total = 0;
+                        $quantities = 0;
+                    ?>
+                       <?php foreach($drinksChoosen as $key => $value){ ?>
+                            <?php 
+                                $cost = (($drinks[$value] + $sizes[$size]) * ($quantity));
+                                
+                                $total += $cost;
+                                $quantities = $quantity;
+                            ?>
+                            <li>
+                                <?php echo $quantity . ' piece(s) of ' . $value . ' amounting to ₱' . $cost; ?>
+                            </li>
+                           
+                        <?php } ?>
+                </ul>
+                <b>Total Number of Items: <?php echo $quantities; ?></b><br>
+                <b>Total Amount: <?php echo $total; ?></b>
+                
+
+            <?php } ?> 
+        <?php }?>
+        
+
+    
+
+</body>
+</html>
